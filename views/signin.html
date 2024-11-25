@@ -28,7 +28,7 @@
                 <div class="col-md-6">
                     <div class="card shadow-lg" style="border-radius: 1rem;"> 
                         <div class="card-body p-5">
-                            <form id="signinForm">
+                            <form id="signinForm" method="POST" action="/api/signin">
                                 <div class="mb-3">
                                     <label for="email" class="form-label">Email Address</label>
                                     <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" required>
@@ -46,5 +46,8 @@
             </div>
         </div>
     </section>
+
+
+    
 </body>
 </html>
