@@ -7,7 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.8.3/angular.min.js" integrity="sha512-KZmyTq3PLx9EZl0RHShHQuXtrvdJ+m35tuOiwlcZfs/rE7NZv29ygNA8SFCkMXTnYZQK2OX0Gm2qKGfvWEtRXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="/angularapp.js"></script>
-    <script src="/controller/userControllers.js"></script>
+    <script src="/controller/signinController.js"></script>
     <script src="/controller/navbarController.js"></script>
     <link rel="stylesheet" href="/style.css">
     <title>Document</title>
@@ -46,32 +46,6 @@
             </div>
         </div>
     </section>
-
-<script>
-        var app = angular.module('makmurSehat', []);
-        app.controller('signinController', function($scope, $http) {
-            $scope.signin = function() {
-                if ($scope.email && $scope.password) {
-                    var data = {
-                        email: $scope.email,
-                        password: $scope.password
-                    };
-                    $http.post('http://localhost:5000/api/users/signin', data, { withCredentials: true })
-                        .then(function(response) {
-                            console.log('Berhasil login:', response.data);
-                            var userName = response.data.user?.name || 'User';
-                            
-                            alert('Berhasil login! Selamat datang, ' + userName);
-                            window.location.href = 'profile.html'; // Misalnya redirect ke profile
-                        })
-                        .catch(function(error) {
-                            console.error('Login gagal:', error);
-                            alert('Login gagal! Periksa email dan password.');
-                        });
-                }
-            };
-        });
-</script>
     
 </body>
 </html>
