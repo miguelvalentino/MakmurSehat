@@ -1,44 +1,31 @@
-// /controller/updateMenuItemController.js
-angular.module('makmurSehat', [])
-  .controller('updateMenuItemController', ['$scope', '$http', '$window', '$location', function($scope, $http, $window, $location) {
-    const itemId = $location.search().id;
+angular.module('makmurSehat')
+  .controller('updateMenuItemController', ['$scope', '$http', '$window', function($scope, $http, $window) {
+    const urlParams = new URLSearchParams(window.location.search);
+    const id = urlParams.get('id'); // Ambil id dari URL
 
-    // Fetch the menu item to be updated
-    function fetchMenuItem() {
-      $http.get(`http://localhost:5000/api/menu/${itemId}`)
-        .then(function(response) {
-          console.log('Menu item data:', response.data);
-          $scope.menuItem = response.data; // populate the form with the current item data
-        })
-        .catch(function(error) {
-          console.error('Error fetching menu item:', error);
-        });
+    if (!id) {
+      console.error('ID tidak ditemukan dalam URL');
+      $window.location.href = 'menumakanan.html'; // Redirect jika id tidak ada
+      return;
     }
 
-    fetchMenuItem();
+    // Fetch the menu item to be updated
+    $http.get('http://localhost:5000/api/menu/' + id)
+      .then(function(response) {
+        $scope.menuItem = response.data;
+      })
+      .catch(function(error) {
+        console.error('Error fetching menu item:', error);
+      });
 
     // Update the menu item
     $scope.updateMenuItem = function() {
-      if (!$scope.menuItem.name || !$scope.menuItem.description || !$scope.menuItem.price || !$scope.menuItem.image) {
-        alert('All fields are required!');
-        return;
-      }
-
-      const updatedMenuItem = {
-        name: $scope.menuItem.name,
-        description: $scope.menuItem.description,
-        price: $scope.menuItem.price,
-        image: $scope.menuItem.image
-      };
-
-      $http.put(`http://localhost:5000/api/menu/${itemId}`, updatedMenuItem)
-        .then(function(response) {
-          alert('Menu item updated successfully!');
-          $window.location.href = 'menu.html'; // redirect back to menu list
+      $http.put('http://localhost:5000/api/menu/' + id, $scope.menuItem)
+        .then(function() {
+          $window.location.href = 'menumakanan.html';
         })
         .catch(function(error) {
           console.error('Error updating menu item:', error);
-          alert('Failed to update menu item!');
         });
     };
   }]);

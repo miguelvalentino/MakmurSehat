@@ -1,63 +1,52 @@
-// /controller/menuController.js
 angular.module('makmurSehat', [])
   .controller('menuController', ['$scope', '$http', '$window', function($scope, $http, $window) {
+    $scope.menuItems = [];
+    $scope.searchQuery = '';
+    $scope.minPrice = null;
+    $scope.maxPrice = null;
+    $scope.sortOrder = 'asc'; // 'asc' untuk ascending, 'desc' untuk descending
 
     // Fetch all menu items
     function fetchMenuItems() {
       $http.get('http://localhost:5000/api/menu')
         .then(function(response) {
-          console.log('Menu items:', response.data);
-          $scope.menuItems = response.data; // populate menu items
+          $scope.menuItems = response.data;
         })
         .catch(function(error) {
           console.error('Error fetching menu items:', error);
         });
     }
 
-    fetchMenuItems();
+    $scope.editMenuItem = function(id) {
+      $window.location.href = 'updatemenu.html?id=' + id;
+    };
 
-    // Add a new menu item
-    $scope.addMenuItem = function() {
-      if (!$scope.name || !$scope.description || !$scope.price || !$scope.image) {
-        alert('All fields are required!');
-        return;
-      }
-
-      const menuItemData = {
-        name: $scope.name,
-        description: $scope.description,
-        price: $scope.price,
-        image: $scope.image
-      };
-
-      $http.post('http://localhost:5000/api/menu', menuItemData)
-        .then(function(response) {
-          alert('Menu item added successfully!');
-          fetchMenuItems(); // reload the menu items list
+    $scope.deleteMenuItem = function(id) {
+      $http.delete('http://localhost:5000/api/menu/' + id)
+        .then(function() {
+          fetchMenuItems();
         })
         .catch(function(error) {
-          console.error('Error adding menu item:', error);
-          alert('Failed to add menu item!');
+          console.error('Error deleting menu item:', error);
         });
     };
 
-    // Edit a menu item
-    $scope.editMenuItem = function(itemId) {
-      $window.location.href = `updateMenuItem.html?id=${itemId}`;
+    // Function to filter menu items based on search query and price range
+    $scope.filterMenuItems = function() {
+      return $scope.menuItems.filter(function(item) {
+        const matchesSearch = item.name.toLowerCase().includes($scope.searchQuery.toLowerCase());
+        const matchesMinPrice = $scope.minPrice === null || item.price >= $scope.minPrice;
+        const matchesMaxPrice = $scope.maxPrice === null || item.price <= $scope.maxPrice;
+        return matchesSearch && matchesMinPrice && matchesMaxPrice;
+      });
     };
 
-    // Delete a menu item
-    $scope.deleteMenuItem = function(itemId) {
-      if (confirm('Are you sure you want to delete this menu item?')) {
-        $http.delete(`http://localhost:5000/api/menu/${itemId}`)
-          .then(function(response) {
-            alert('Menu item deleted!');
-            fetchMenuItems(); // reload menu list after deletion
-          })
-          .catch(function(error) {
-            console.error('Error deleting menu item:', error);
-            alert('Failed to delete menu item!');
-          });
-      }
+    // Function to sort menu items by price
+    $scope.sortMenuItems = function() {
+      return $scope.filterMenuItems().sort(function(a, b) {
+        return $scope.sortOrder === 'asc' ? a.price - b.price : b.price - a.price;
+      });
     };
+
+    fetchMenuItems();
   }]);

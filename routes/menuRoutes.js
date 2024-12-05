@@ -32,6 +32,7 @@ router.get('/:id', async (req, res) => {
 // Create a new menu item
 router.post('/', async (req, res) => {
   try {
+    console.log('Request body:', req.body); // Debug input data
     const menuItem = await Menu.create(req.body);
     res.status(201).json(menuItem);
   } catch (err) {
@@ -39,6 +40,7 @@ router.post('/', async (req, res) => {
     res.status(500).json({ error: 'Failed to create menu item' });
   }
 });
+
 
 // Update a menu item
 router.put('/:id', async (req, res) => {
@@ -61,5 +63,6 @@ router.delete('/:id', async (req, res) => {
     res.status(500).json({ error: 'Failed to delete menu item' });
   }
 });
+
 
 module.exports = router;
