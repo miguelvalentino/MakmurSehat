@@ -9,7 +9,7 @@
     <script src="/angularapp.js"></script>
     <script src="/controller/profileController.js"></script>
     <script src="/controller/navbarController.js"></script>
-    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="/style3.css">
     <title>Document</title>
 </head>
 <body ng-controller="profileController">
@@ -64,6 +64,16 @@
                             <p id="deleteWarning"></p>
                             <button ng-click="logout()" class="btn btn-secondary">Logout</button>
                         </div>
+                        <div class="progress mb-3">
+                            <div class="progress-bar" role="progressbar" 
+                                 style="width: {{ profileCompletion }}%;" 
+                                 aria-valuenow="{{ profileCompletion }}" 
+                                 aria-valuemin="0" 
+                                 aria-valuemax="100">
+                                {{ profileCompletion }}%
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>

@@ -119,4 +119,31 @@ angular.module('makmurSehat', [])
         }
       });
     };
+    // Data profil pengguna
+    $scope.profile = {
+      name: "John Doe",
+      pekerjaan: "Software Engineer",
+      email: "",
+      no_telpon: "08123456789",
+      negara_asal: ""
+  };
+
+  // Fungsi untuk menghitung kelengkapan profil
+  $scope.calculateProfileCompletion = function () {
+      let filledFields = 0;
+      const totalFields = 5; // Jumlah field profil
+
+      // Menghitung field yang terisi
+      if ($scope.profile.name) filledFields++;
+      if ($scope.profile.pekerjaan) filledFields++;
+      if ($scope.profile.email) filledFields++;
+      if ($scope.profile.no_telpon) filledFields++;
+      if ($scope.profile.negara_asal) filledFields++;
+
+      // Menghitung persentase kelengkapan
+      $scope.profileCompletion = Math.round((filledFields / totalFields) * 100);
+  };
+
+  // Panggil fungsi ini saat controller di-load
+  $scope.calculateProfileCompletion();
   }]);
