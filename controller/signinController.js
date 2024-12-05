@@ -35,4 +35,17 @@ angular.module('makmurSehat', [])
         alert('Email dan password harus diisi!');
       }
     };
+
+    // Angular JS menampilkan pesan saat klik lupa password
+    $scope.resetPassword = function() {
+      // Menampilkan pesan konfirmasi setelah klik Lupa Password
+      $scope.isEmailSent = true;
+
+      // Menghilangkan pesan setelah 5 detik
+      setTimeout(function() {
+          $scope.isEmailSent = false;
+          $scope.$apply();  // Memastikan perubahan scope diterapkan
+      }, 5000);
+  };
+
   }]);
