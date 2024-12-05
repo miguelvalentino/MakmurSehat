@@ -1,73 +1,52 @@
-// Inisialisasi aplikasi AngularJS
-var app = angular.module('menuApp', []);
+angular.module('makmurSehat', [])
+  .controller('menuController', ['$scope', '$http', '$window', function($scope, $http, $window) {
+    $scope.menuItems = [];
+    $scope.searchQuery = '';
+    $scope.minPrice = null;
+    $scope.maxPrice = null;
+    $scope.sortOrder = 'asc'; // 'asc' untuk ascending, 'desc' untuk descending
 
-// Controller untuk aplikasi
-app.controller('menuController', function ($scope) {
-    // Data menu makanan
-    $scope.menus = [
-        {
-            name: 'Salad Buah',
-            description: 'Campuran buah segar dengan saus yogurt.',
-            price: 25000,
-            image: 'assets/SaladBuah.webp',
-        },
-        {
-            name: 'Ayam Panggang',
-            description: 'Ayam panggang dengan bumbu rempah.',
-            price: 50000,
-            image: 'assets/ayampanggang.jpg',
-        },
-        {
-            name: 'Nasi Goreng Sehat',
-            description: 'Nasi goreng dengan sayuran segar.',
-            price: 30000,
-            image: 'assets/nasigoreng.jpg',
-        },
-        {
-            name: 'Smoothie Bowl',
-            description: 'Smoothie dari buah segar dengan topping granola.',
-            price: 35000,
-            image: 'assets/smoothiebowl.jpg',
-        },
-        {
-            name: 'Sup Ayam Sehat',
-            description: 'Sup ayam rendah lemak dengan sayuran.',
-            price: 40000,
-            image: 'assets/supayam.jpg',
-        },
-        {
-            name: 'Avocado Toast',
-            description: 'Roti panggang dengan olesan alpukat dan topping sehat.',
-            price: 45000,
-            image: 'assets/avocadotoast.jpeg',
-        },
-    ];
+    // Fetch all menu items
+    function fetchMenuItems() {
+      $http.get('http://localhost:5000/api/menu')
+        .then(function(response) {
+          $scope.menuItems = response.data;
+        })
+        .catch(function(error) {
+          console.error('Error fetching menu items:', error);
+        });
+    }
 
-    // Data keranjang belanja
-    $scope.cart = [];
-
-    // Tambahkan menu ke keranjang
-    $scope.addToCart = function (menu) {
-        $scope.cart.push(menu);
+    $scope.editMenuItem = function(id) {
+      $window.location.href = 'updatemenu.html?id=' + id;
     };
 
-    // Tambahkan fungsi untuk menghapus item dari keranjang
-    $scope.removeFromCart = function (index) {
-    $scope.cart.splice(index, 1);
-   };
-
-
-    // Hitung total harga
-    $scope.getTotal = function () {
-        return $scope.cart.reduce((total, item) => total + item.price, 0);
+    $scope.deleteMenuItem = function(id) {
+      $http.delete('http://localhost:5000/api/menu/' + id)
+        .then(function() {
+          fetchMenuItems();
+        })
+        .catch(function(error) {
+          console.error('Error deleting menu item:', error);
+        });
     };
 
-    $scope.placeOrder = function () {
-        // Tampilkan pesan pop-up
-        alert("Pesanan Berhasil! Tunggu ya!");
-        
-        // Kosongkan keranjang
-        $scope.cart = [];
+    // Function to filter menu items based on search query and price range
+    $scope.filterMenuItems = function() {
+      return $scope.menuItems.filter(function(item) {
+        const matchesSearch = item.name.toLowerCase().includes($scope.searchQuery.toLowerCase());
+        const matchesMinPrice = $scope.minPrice === null || item.price >= $scope.minPrice;
+        const matchesMaxPrice = $scope.maxPrice === null || item.price <= $scope.maxPrice;
+        return matchesSearch && matchesMinPrice && matchesMaxPrice;
+      });
     };
-    
-});
+
+    // Function to sort menu items by price
+    $scope.sortMenuItems = function() {
+      return $scope.filterMenuItems().sort(function(a, b) {
+        return $scope.sortOrder === 'asc' ? a.price - b.price : b.price - a.price;
+      });
+    };
+
+    fetchMenuItems();
+  }]);
