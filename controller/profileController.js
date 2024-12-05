@@ -1,32 +1,30 @@
 angular.module('makmurSehat', [])
   .controller('profileController', ['$scope', '$http', '$window', function($scope, $http, $window) {
 
-    //link ke updatepassword.html
     $scope.UpdatePassword = function() {
-      $window.location.href = 'updatepassword.html'; 
+      $window.location.href = 'updatepassword.html'; // Arahkan ke halaman Edit Password
     };
     function fetchUserProfile() {
-      //ambil token dari localstorage
-      const token = localStorage.getItem('authToken'); 
+      const token = localStorage.getItem('authToken'); // Ambil token dari localStorage
       if (!token) {
         alert('You need to log in first.');
-        $window.location.href = 'signin.html'; //redirect ke halaman login kalau tidak ada token
+        $window.location.href = 'signin.html'; // Redirect ke halaman login jika token tidak ada
         return;
       }
 
       $http.get('http://localhost:5000/api/users/profile', {
         headers: {
-          'Authorization': `Bearer ${token}` //Kirim token
+          'Authorization': `Bearer ${token}` // Kirim token dalam header
         }
       })
       .then(function(response) {
         console.log('Profile data:', response.data);
-        $scope.profile = response.data; //mengisi data profil
+        $scope.profile = response.data; // Mengisi data profil
       })
       .catch(function(error) {
         if (error.status === 401) {
           alert('You are not authorized. Please log in.');
-          $window.location.href = 'signin.html'; //redirect ke halaman login
+          $window.location.href = 'signin.html'; // Redirect ke halaman login
         } else {
           console.log('Error fetching profile:', error);
         }
@@ -35,13 +33,13 @@ angular.module('makmurSehat', [])
 
     fetchUserProfile();
 
-    //logout
+    // Logout function
     $scope.logout = function() {
-      $window.sessionStorage.removeItem('userId'); //hapus userid dari session storage
-      $window.location.href = '/views/signin.html'; //redirect ke login page
+      $window.sessionStorage.removeItem('userId'); // Clear the userId from sessionStorage
+      $window.location.href = '/views/signin.html'; // Redirect to login page
     };
 
-    //delete account dengan konfirmasi 3 kali klik tombol
+    // Delete Account dengan konfirmasi 3 kali klik
     $scope.deleteAttempts = 0; // Hitungan klik
 
     $scope.deleteAccount = function() {
@@ -50,8 +48,8 @@ angular.module('makmurSehat', [])
       if ($scope.deleteAttempts < 3) {
         alert(`Klik ${3 - $scope.deleteAttempts} kali lagi untuk menghapus akun.`);
       } else {
-        if (confirm('anda yakin ingin menghapus akun? akun anda tidak akan kembali.')) {
-          const token = localStorage.getItem('authToken'); //ambil token JWT dari localstorage
+        if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+          const token = localStorage.getItem('authToken'); // Ambil token JWT dari localStorage
           if (!token) {
             alert('You need to log in first.');
             $window.location.href = 'signin.html';
@@ -60,19 +58,19 @@ angular.module('makmurSehat', [])
     
           $http.delete('http://localhost:5000/api/users/profile', {
             headers: {
-              'Authorization': `Bearer ${token}` //kirim token JWT diheader
+              'Authorization': `Bearer ${token}` // Kirim token JWT di header
             }
           })
           .then(function(response) {
             alert('Akun berhasil dihapus.');
-            $scope.logout(); //logout setelah akun user dihapus
+            $scope.logout(); // Log out setelah akun dihapus
           })
           .catch(function(error) {
             console.error('Error deleting account:', error);
             alert('Gagal menghapus akun. Coba lagi nanti.');
           });
         }
-        $scope.deleteAttempts = 0; //reset hitungan klik
+        $scope.deleteAttempts = 0; // Reset hitungan klik
       }
     };    
 
@@ -119,31 +117,4 @@ angular.module('makmurSehat', [])
         }
       });
     };
-    // Data profil pengguna
-    $scope.profile = {
-      name: "John Doe",
-      pekerjaan: "Software Engineer",
-      email: "",
-      no_telpon: "08123456789",
-      negara_asal: ""
-  };
-
-  // Fungsi untuk menghitung kelengkapan profil
-  $scope.calculateProfileCompletion = function () {
-      let filledFields = 0;
-      const totalFields = 5; // Jumlah field profil
-
-      // Menghitung field yang terisi
-      if ($scope.profile.name) filledFields++;
-      if ($scope.profile.pekerjaan) filledFields++;
-      if ($scope.profile.email) filledFields++;
-      if ($scope.profile.no_telpon) filledFields++;
-      if ($scope.profile.negara_asal) filledFields++;
-
-      // Menghitung persentase kelengkapan
-      $scope.profileCompletion = Math.round((filledFields / totalFields) * 100);
-  };
-
-  // Panggil fungsi ini saat controller di-load
-  $scope.calculateProfileCompletion();
   }]);
