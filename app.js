@@ -4,6 +4,7 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const userRoutes = require('./routes/userRoutes');
+const menuRoutes = require('./routes/menuRoutes');
 
 require('dotenv').config();
 
@@ -29,6 +30,7 @@ app.use(session({
 }));
 //routes
 app.use('/api/users', userRoutes);
+app.use('/api/menu', menuRoutes)
 
 //jalanin server
 const PORT = process.env.PORT || 5000;
