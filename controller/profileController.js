@@ -63,6 +63,7 @@ angular.module('makmurSehat', [])
           })
           .then(function(response) {
             alert('Akun berhasil dihapus.');
+            localStorage.removeItem('authToken');
             $scope.logout(); // Log out setelah akun dihapus
           })
           .catch(function(error) {
