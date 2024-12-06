@@ -1,8 +1,7 @@
-// /models/menuModel.js
-const db = require('../database'); // import database connection
+const db = require('../database'); 
 
 const Menu = {
-  // Create a new menu item
+  //query buat menu baru
   create: (data) => {
     const query = `
       INSERT INTO menus (name, description, price, image)
@@ -11,19 +10,19 @@ const Menu = {
     return db.one(query, [data.name, data.description, data.price, data.image]);
   },
 
-  // Get all menu items
+  //query ambil semua menu
   getAll: () => {
     const query = 'SELECT * FROM menus;';
     return db.any(query);
   },
 
-  // Get a menu item by ID
+  //ambil menu berdasar id
   getById: (id) => {
     const query = 'SELECT * FROM menus WHERE id = $1;';
     return db.oneOrNone(query, [id]);
   },
 
-  // Update a menu item
+  //update menu 
   update: (id, data) => {
     const query = `
       UPDATE menus
@@ -33,7 +32,7 @@ const Menu = {
     return db.one(query, [data.name, data.description, data.price, data.image, id]);
   },
 
-  // Delete a menu item
+  //delete menu
   delete: (id) => {
     const query = 'DELETE FROM menus WHERE id = $1;';
     return db.none(query, [id]);

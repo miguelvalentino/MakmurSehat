@@ -1,12 +1,13 @@
 angular.module('makmurSehat', [])
   .controller('menuController', ['$scope', '$http', '$window', function($scope, $http, $window) {
-    $scope.menuItems = [];
+    $scope.menuItems = []; //buat fitur tambahan
     $scope.searchQuery = '';
     $scope.minPrice = null;
     $scope.maxPrice = null;
-    $scope.sortOrder = 'asc'; // 'asc' untuk ascending, 'desc' untuk descending
+    $scope.sortOrder = 'asc';
 
-    // Fetch all menu items
+
+    //ambil semua menu
     function fetchMenuItems() {
       $http.get('http://localhost:5000/api/menu')
         .then(function(response) {
@@ -16,11 +17,11 @@ angular.module('makmurSehat', [])
           console.error('Error fetching menu items:', error);
         });
     }
-
+    //edit menu
     $scope.editMenuItem = function(id) {
       $window.location.href = 'updatemenu.html?id=' + id;
     };
-
+    //delete menu
     $scope.deleteMenuItem = function(id) {
       $http.delete('http://localhost:5000/api/menu/' + id)
         .then(function() {
@@ -31,7 +32,7 @@ angular.module('makmurSehat', [])
         });
     };
 
-    // Function to filter menu items based on search query and price range
+    //buat filter + search
     $scope.filterMenuItems = function() {
       return $scope.menuItems.filter(function(item) {
         const matchesSearch = item.name.toLowerCase().includes($scope.searchQuery.toLowerCase());
@@ -41,7 +42,7 @@ angular.module('makmurSehat', [])
       });
     };
 
-    // Function to sort menu items by price
+    //untuk sort berdasarkan harga
     $scope.sortMenuItems = function() {
       return $scope.filterMenuItems().sort(function(a, b) {
         return $scope.sortOrder === 'asc' ? a.price - b.price : b.price - a.price;

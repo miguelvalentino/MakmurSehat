@@ -1,7 +1,7 @@
 angular.module('makmurSehat')
   .controller('addMenuController', ['$scope', '$http', '$window', function($scope, $http, $window) {
     $scope.addMenuItem = function() {
-      const newItem = {
+      const newItem = { //buat menambahkan menu
         name: $scope.name,
         description: $scope.description,
         price: $scope.price,

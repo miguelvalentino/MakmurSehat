@@ -1,9 +1,8 @@
-// /routes/menuRoutes.js
 const express = require('express');
 const router = express.Router();
 const Menu = require('../models/menuModel');
 
-// Get all menu items
+//tampilin menu
 router.get('/', async (req, res) => {
   try {
     const menuItems = await Menu.getAll();
@@ -14,7 +13,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-// Get menu item by ID
+
 router.get('/:id', async (req, res) => {
   try {
     const menuItem = await Menu.getById(req.params.id);
@@ -29,10 +28,9 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// Create a new menu item
+//buat menu baru
 router.post('/', async (req, res) => {
   try {
-    console.log('Request body:', req.body); // Debug input data
     const menuItem = await Menu.create(req.body);
     res.status(201).json(menuItem);
   } catch (err) {
@@ -42,7 +40,7 @@ router.post('/', async (req, res) => {
 });
 
 
-// Update a menu item
+//update menu
 router.put('/:id', async (req, res) => {
   try {
     const menuItem = await Menu.update(req.params.id, req.body);
@@ -53,7 +51,7 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-// Delete a menu item
+//delete menu
 router.delete('/:id', async (req, res) => {
   try {
     await Menu.delete(req.params.id);

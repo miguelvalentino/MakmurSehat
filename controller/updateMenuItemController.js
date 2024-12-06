@@ -1,15 +1,15 @@
 angular.module('makmurSehat')
   .controller('updateMenuItemController', ['$scope', '$http', '$window', function($scope, $http, $window) {
     const urlParams = new URLSearchParams(window.location.search);
-    const id = urlParams.get('id'); // Ambil id dari URL
+    const id = urlParams.get('id'); //ambil id dari URL
 
     if (!id) {
       console.error('ID tidak ditemukan dalam URL');
-      $window.location.href = 'menumakanan.html'; // Redirect jika id tidak ada
+      $window.location.href = 'menumakanan.html'; //redirect jika id tidak ada
       return;
     }
 
-    // Fetch the menu item to be updated
+    //buat update menu
     $http.get('http://localhost:5000/api/menu/' + id)
       .then(function(response) {
         $scope.menuItem = response.data;
@@ -18,7 +18,7 @@ angular.module('makmurSehat')
         console.error('Error fetching menu item:', error);
       });
 
-    // Update the menu item
+    //update menu
     $scope.updateMenuItem = function() {
       $http.put('http://localhost:5000/api/menu/' + id, $scope.menuItem)
         .then(function() {
